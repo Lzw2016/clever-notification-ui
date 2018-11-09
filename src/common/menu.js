@@ -20,7 +20,7 @@ const menuData = [
     path: 'dashboard/:list',
   },
   {
-    name: '系统配置',
+    name: '接入系统配置',
     icon: 'mokuai',
     path: 'sys_name/:list',
   },
