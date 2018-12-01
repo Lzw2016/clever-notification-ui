@@ -22,10 +22,10 @@ export default class LoginPage extends Component {
   };
 
   handleSubmit = (err, values) => {
-    const { type } = this.state;
+    const { type, autoLogin } = this.state;
     const { dispatch } = this.props;
     if (!err) {
-      dispatch({ type: 'login/login', payload: { ...values, type } });
+      dispatch({ type: 'login/login', payload: { ...values, type, autoLogin } });
     }
   };
 
@@ -44,9 +44,9 @@ export default class LoginPage extends Component {
       <div className={styles.main}>
         <Login defaultActiveKey={type} onTabChange={this.onTabChange} onSubmit={this.handleSubmit}>
           <Tab key="account" tab="账户密码登录">
-            {login.status === 'error' && login.type === 'account' && !submitting && this.renderMessage('账户或密码错误（admin/123456）')}
-            <UserName name="userName" placeholder="用户名(admin)" />
-            <Password name="password" placeholder="密码(123456)" />
+            {login.status === 'error' && login.type === 'account' && !submitting && this.renderMessage('账户或密码错误')}
+            <UserName name="userName" placeholder="用户名" rules={[{ required: true, whitespace: true, message: '请输入用户名!' }]} />
+            <Password name="password" placeholder="密码" rules={[{ required: true, message: '请输入密码!' }]} />
           </Tab>
           <div>
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>

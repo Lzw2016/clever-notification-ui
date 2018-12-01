@@ -96,7 +96,8 @@ export default function request(url, options) {
     .catch(e => {
       const { dispatch } = store;
       const status = e.name;
-      if (status === 401) {
+      const { hash } = window.location;
+      if (status === 401 && !lodash.startsWith(hash, "#/user/login?redirect=")) {
         dispatch({ type: 'login/logout' });
         // return;
       }

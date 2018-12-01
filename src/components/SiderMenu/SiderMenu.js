@@ -16,7 +16,7 @@ const { SubMenu } = Menu;
 //   icon: <Icon type="setting" />,
 const getIcon = icon => {
   if (typeof icon === 'string') {
-    if (icon.indexOf('http') === 0) {
+    if (icon.indexOf('http://') === 0) {
       return <img src={icon} alt="icon" className={`${styles.icon} sider-menu-item-img`} />;
     }
     return <BizIcon type={icon} />;
@@ -206,7 +206,7 @@ export default class SiderMenu extends PureComponent {
       openKeys: moreThanOne ? [lastOpenKey] : [...openKeys],
     });
   };
-
+  
   render() {
     const { logo, menuData, collapsed, onCollapse } = this.props;
     const { openKeys } = this.state;

@@ -1,4 +1,5 @@
 import React from 'react';
+import lodash from 'lodash';
 import PromiseRender from './PromiseRender';
 import { CURRENT } from './renderAuthorize';
 
@@ -15,6 +16,7 @@ function isPromise(obj) {
  * @param { 未通过的组件 no pass components } Exception
  */
 const checkPermissions = (authority, currentAuthority, target, Exception) => {
+  // console.log('### authority->', authority , ' | currentAuthority->', currentAuthority);
   // 没有判定权限.默认查看所有
   // Retirement authority, return target;
   if (!authority) {
@@ -22,13 +24,18 @@ const checkPermissions = (authority, currentAuthority, target, Exception) => {
   }
   // 数组处理
   if (Array.isArray(authority)) {
+    // 空数组直接返回
+    if (authority.length <= 0) {
+      return target;
+    }
+    // 非空数组
     if (authority.indexOf(currentAuthority) >= 0) {
       return target;
     }
     if (Array.isArray(currentAuthority)) {
-      for (let i = 0; i < currentAuthority.length; i += 1) {
-        const element = currentAuthority[i];
-        if (authority.indexOf(element) >= 0) {
+      for (let i = 0; i < authority.length; i += 1) {
+        const element = authority[i];
+        if (lodash.indexOf(currentAuthority, element) >= 0) {
           return target;
         }
       }
@@ -42,11 +49,8 @@ const checkPermissions = (authority, currentAuthority, target, Exception) => {
       return target;
     }
     if (Array.isArray(currentAuthority)) {
-      for (let i = 0; i < currentAuthority.length; i += 1) {
-        const element = currentAuthority[i];
-        if (authority.indexOf(element) >= 0) {
-          return target;
-        }
+      if (lodash.indexOf(currentAuthority, authority) >= 0) {
+        return target;
       }
     }
     return Exception;

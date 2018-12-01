@@ -1,28 +1,23 @@
-// import request from '../utils/request';
+// import { stringify } from 'qs';
+import request from '../utils/request';
+// import { LoginEncrypt } from '../utils/crypto'
 
-// 模拟登录
-export async function fakeAccountLogin(payload) {
-  console.log('用户登录', payload);
-  const { userName, password } = payload;
-  if (userName === 'admin' && password === '123456') {
-    return { status: 'ok', type: 'account', currentAuthority: 'admin' };
-  }
-  return { ...payload, status: 'error' };
+// 用户登录 type,
+export async function accountLogin({ userName, password, autoLogin }) {
+  // TODO 用户登录修改
+  return { success: true, message: '...', timestamp: 1541944461942, "user": { username: 'lizw', telephone: '', email: '', userType: '', authorities: [], roleNames: [] } };
+  // return request('/login.json', { method: 'POST', body: { loginType: "username", username: userName, password: LoginEncrypt(password), "remember-me": autoLogin } });
 }
 
-// 模拟注册
-export async function fakeRegister() {
-  return { status: 'ok', currentAuthority: 'user' };
+// 用户登出
+export async function accountLogout() {
+  return request('/logout.json', { method: 'POST' });
 }
 
 // 模拟查询当前用户信息
 export async function queryCurrent() {
-  return {
-    name: 'admin',
-    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
-    userid: '00000001',
-    notifyCount: 0,
-  };
+  return { username: 'lizw', telephone: '', email: '', userType: '', authorities: [], roleNames: [] };
+  // return request('/login/user_info.json');
 }
 
 // 模拟查询通知消息
@@ -51,4 +46,9 @@ export async function queryNotices() {
   //   status: "processing",
   //   type: "待办",
   // }];
+}
+
+// 模拟注册
+export async function fakeRegister() {
+  return { status: 'ok', currentAuthority: 'user' };
 }

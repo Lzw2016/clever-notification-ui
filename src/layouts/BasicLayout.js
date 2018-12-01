@@ -115,13 +115,12 @@ export default class BasicLayout extends React.PureComponent {
 
   componentDidMount() {
     this.enquireHandler = enquireScreen(mobile => {
-      this.setState({
-        isMobile: mobile,
-      });
+      this.setState({ isMobile: mobile });
     });
     const { dispatch } = this.props;
     dispatch({
       type: 'user/fetchCurrent',
+      successCallBack: () => this.forceUpdate(),
     });
   }
 
@@ -167,19 +166,13 @@ export default class BasicLayout extends React.PureComponent {
 
   handleMenuCollapse = collapsed => {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'global/changeLayoutCollapsed',
-      payload: collapsed,
-    });
+    dispatch({ type: 'global/changeLayoutCollapsed', payload: collapsed });
   };
 
   handleNoticeClear = type => {
     message.success(`清空了${type}`);
     const { dispatch } = this.props;
-    dispatch({
-      type: 'global/clearNotices',
-      payload: type,
-    });
+    dispatch({ type: 'global/clearNotices', payload: type });
   };
 
   handleMenuClick = ({ key }) => {
@@ -189,18 +182,14 @@ export default class BasicLayout extends React.PureComponent {
       return;
     }
     if (key === 'logout') {
-      dispatch({
-        type: 'login/logout',
-      });
+      dispatch({ type: 'login/logout' });
     }
   };
 
   handleNoticeVisibleChange = visible => {
     const { dispatch } = this.props;
     if (visible) {
-      dispatch({
-        type: 'global/fetchNotices',
-      });
+      dispatch({ type: 'global/fetchNotices' });
     }
   };
 
@@ -265,7 +254,7 @@ export default class BasicLayout extends React.PureComponent {
                 copyright={SystemInfo.copyright ? SystemInfo.copyright : undefined}
               />
             </Footer>
-          )}
+            )}
         </Layout>
       </Layout>
     );

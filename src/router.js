@@ -67,7 +67,8 @@ function RouterConfig({ history, app }) {
             <AuthorizedRoute
               path="/"
               render={props => <BasicLayout {...props} />}
-              authority={['admin', 'user']}
+              // authority={['admin', 'user']}
+              authority={[]}
               redirectPath={getQueryPath('/user/login', {
                 redirect: window.location.href,
               })}

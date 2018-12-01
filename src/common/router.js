@@ -76,10 +76,10 @@ export const getRouterData = app => {
     },
 
     '/demo/list': {
-      component: dynamicWrapper(app, [], () => import('../routes/Dashboard/demo')),
+      component: dynamicWrapper(app, [], () => import('../routes/Dashboard/index')),
     },
     '/demo/:list': {
-      component: dynamicWrapper(app, [], () => import('../routes/Dashboard/demo')),
+      component: dynamicWrapper(app, [], () => import('../routes/Dashboard/index')),
     },
 
     // '/aaa/bbb': {

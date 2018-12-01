@@ -12,12 +12,12 @@ const SorterOrderMapper = {
 
 // 用户类型，0：系统内建，1：外部系统用户
 const UserTypeArray = [
-  { value: '0', label: '内部系统' },
-  { value: '1', label: '外部系统' },
+  { value: '0', label: '内部用户' },
+  { value: '1', label: '外系统用户' },
 ];
 const UserTypeMapper = {
-  '0': { label: '内部系统', color: '#19be6b' },
-  '1': { label: '外部系统', color: '#ff9900' },
+  '0': { label: '内部用户', color: '#19be6b' },
+  '1': { label: '外系统用户', color: '#ff9900' },
   error: { label: '未知', color: '#ed4014' },
 };
 
@@ -80,6 +80,30 @@ const NeedAuthorizationMapper = {
   error: { label: '未知', color: '#ed4014' },
 };
 
+// 登录状态，0：未知；1：已登录；2：登录已过期
+const LoginStateArray = [
+  { value: '0', label: '未知' },
+  { value: '1', label: '已登录' },
+  { value: '2', label: '登录已过期' },
+];
+const LoginStateMapper = {
+  '0': { label: '未知', color: '#f5222d' },
+  '1': { label: '已登录', color: '#52c41a' },
+  '2': { label: '登录已过期', color: '#faad14' },
+  error: { label: '未知', color: '#f5222d' },
+};
+
+// 认证模式，0：sesion-cookie，1：jwt-token
+const LoginModelArray = [
+  { value: '0', label: 'Sesion-Cookie' },
+  { value: '1', label: 'Jwt-Token' },
+];
+const LoginModelMapper = {
+  '0': { label: 'Sesion-Cookie', color: undefined },
+  '1': { label: 'Jwt-Token', color: undefined },
+  error: { label: '未知', color: '#f5222d' },
+};
+
 export {
   StatusArray,
   SorterOrderMapper,
@@ -95,4 +119,8 @@ export {
   TargetExistMapper,
   NeedAuthorizationArray,
   NeedAuthorizationMapper,
+  LoginStateArray,
+  LoginStateMapper,
+  LoginModelArray,
+  LoginModelMapper,
 };
