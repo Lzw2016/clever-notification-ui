@@ -9,20 +9,20 @@ const menuData = [
   // hideInMenu: true,
   // authority: 'admin',
   // },
-  {
-    name: 'Demo',
-    icon: 'email_account_suser',
-    path: 'demo/:list',
-  },
-  {
-    name: '系统仪表盘',
-    icon: 'dashboard1',
-    path: 'dashboard/:list',
-  },
+  // {
+  //   name: 'Demo',
+  //   icon: 'email_account_suser',
+  //   path: 'demo/:list',
+  // },
+  // {
+  //   name: '系统仪表盘',
+  //   icon: 'dashboard1',
+  //   path: 'dashboard/:list',
+  // },
   {
     name: '接入系统配置',
     icon: 'mokuai',
-    path: 'sys_name/:list',
+    path: 'service_sys/:list',
   },
   {
     name: '消息模版配置',

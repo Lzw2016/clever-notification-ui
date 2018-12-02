@@ -75,11 +75,29 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
     },
 
-    '/demo/list': {
-      component: dynamicWrapper(app, [], () => import('../routes/Dashboard/index')),
+    '/service_sys/list': {
+      component: dynamicWrapper(app, ['ServiceSysModel'], () => import('../routes/Notification/ServiceSys')),
     },
-    '/demo/:list': {
-      component: dynamicWrapper(app, [], () => import('../routes/Dashboard/index')),
+    '/service_sys/:list': {
+      component: dynamicWrapper(app, ['ServiceSysModel'], () => import('../routes/Notification/ServiceSys')),
+    },
+    '/message_template/:list': {
+      component: dynamicWrapper(app, ['MessageTemplateModel'], () => import('../routes/Notification/MessageTemplate')),
+    },
+    '/sys_bind_email/:list': {
+      component: dynamicWrapper(app, ['SysBindEmailModel'], () => import('../routes/Notification/SysBindEmail')),
+    },
+    '/sys_bind_sms/:list': {
+      component: dynamicWrapper(app, ['SysBindSmsModel'], () => import('../routes/Notification/SysBindSms')),
+    },
+    '/receiver_black_list/:list': {
+      component: dynamicWrapper(app, ['ReceiverBlackListModel'], () => import('../routes/Notification/ReceiverBlackList')),
+    },
+    '/frequency_limit/:list': {
+      component: dynamicWrapper(app, ['FrequencyLimitModel'], () => import('../routes/Notification/FrequencyLimit')),
+    },
+    '/message_send_log/:list': {
+      component: dynamicWrapper(app, ['MessageSendLogModel'], () => import('../routes/Notification/MessageSendLog')),
     },
 
     // '/aaa/bbb': {

@@ -1,5 +1,6 @@
 {
   "javascript.implicitProjectConfig.experimentalDecorators": true,
   "breadcrumbs.enabled": true,
-  "breadcrumbs.symbolPath": "off"
+  "breadcrumbs.symbolPath": "off",
+  "editor.tabSize": 2
 }
