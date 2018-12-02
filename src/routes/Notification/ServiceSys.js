@@ -18,9 +18,6 @@ export default class ServiceSys extends PureComponent {
 
   // 数据初始化
   componentDidMount() {
-    // const { dispatch } = this.props;
-    // dispatch({ type: 'GlobalEnumModel/getAllJobClassName' });
-    // dispatch({ type: 'GlobalEnumModel/getJobGroupNames' });
     this.findByPage();
   }
 
