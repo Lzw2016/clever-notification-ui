@@ -1,11 +1,11 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Card, Form, Row, Select, Button, Input, Table } from 'antd';
+import { Card, Form, Row, Select, Button, Input, Table, Divider } from 'antd';
 import { connect } from 'dva';
 // import moment from 'moment';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 // import { LocaleLanguage, SystemInfo } from '../../utils/constant';
 // import { changeLocale } from '../../utils/utils';
-import { SorterOrderMapper, StatusArray } from '../../utils/enum';
+import { SorterOrderMapper, StatusArray, StatusMapper } from '../../utils/enum';
 // import classNames from 'classnames';
 import styles from './ServiceSys.less';
 
@@ -79,10 +79,18 @@ export default class ServiceSys extends PureComponent {
           </Form.Item>
           <Form.Item className={styles.formItemButton}>
             <Button type="primary" htmlType="submit" disabled={queryLoading}>查询</Button>
+            <span className={styles.spanWidth16} />
+            <Button>新增</Button>
           </Form.Item>
         </Row>
       </Form>
     );
+  }
+
+  getEnabledLabel = (val) => {
+    let enabled = StatusMapper[`${val}`];
+    if (!enabled) enabled = StatusMapper.error;
+    return <span style={{ color: enabled.color }}>{enabled.label}</span>
   }
 
   // 数据表格
@@ -90,10 +98,10 @@ export default class ServiceSys extends PureComponent {
     const { ServiceSysModel, queryLoading } = this.props;
     const columns = [
       { title: '系统名称', dataIndex: 'sysName' },
-      { title: '启用', dataIndex: 'enabled' },
-      { title: '启用黑名单', dataIndex: 'enableBlackList' },
+      { title: '启用', dataIndex: 'enabled', render: this.getEnabledLabel },
+      { title: '启用黑名单', dataIndex: 'enableBlackList', render: this.getEnabledLabel },
       { title: '黑名单帐号最大数量', dataIndex: 'blackListMaxCount' },
-      { title: '启用限速', dataIndex: 'enableFrequencyLimit' },
+      { title: '启用限速', dataIndex: 'enableFrequencyLimit', render: this.getEnabledLabel },
       { title: '限速帐号最大数量', dataIndex: 'frequencyLimitMaxCount' },
       // { title: '说明', dataIndex: 'description' },
       // { title: '创建时间', dataIndex: 'createAt' },
@@ -102,6 +110,10 @@ export default class ServiceSys extends PureComponent {
         title: '操作', align: 'center', key: 'action',
         render: () => (
           <Fragment>
+            <a>详情</a>
+            <Divider type="vertical" />
+            <a>编辑</a>
+            <Divider type="vertical" />
             <a>删除</a>
           </Fragment>
         ),

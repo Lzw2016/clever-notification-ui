@@ -52,6 +52,7 @@ module.exports = {
     'no-plusplus': [0],
     'prefer-destructuring': [0],
     'react/sort-comp': [0],
+    'no-continue': [0],
     'comma-dangle': [
       'error',
       {

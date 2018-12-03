@@ -1,11 +1,11 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Card, Form, Row, Input, Select, Button, Table } from 'antd';
+import { Card, Form, Row, Input, Select, Button, Table, Divider } from 'antd';
 import { connect } from 'dva';
 // import moment from 'moment';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 // import { LocaleLanguage, SystemInfo } from '../../utils/constant';
-// import { changeLocale } from '../../utils/utils';
-import { SorterOrderMapper, SendStateArray } from '../../utils/enum';
+import { fmtTime } from '../../utils/fmt';
+import { SorterOrderMapper, SendStateArray, SendStateMapper, MessageTypeMapper } from '../../utils/enum';
 // import classNames from 'classnames';
 import styles from './MessageSendLog.less';
 
@@ -87,11 +87,23 @@ export default class MessageSendLog extends PureComponent {
     const columns = [
       { title: '系统名称', dataIndex: 'sysName' },
       { title: 'Send ID', dataIndex: 'sendId' },
-      { title: '消息类型', dataIndex: 'messageType' },
+      {
+        title: '消息类型', dataIndex: 'messageType', render: val => {
+          let messageType = MessageTypeMapper[`${val}`];
+          if (!messageType) messageType = MessageTypeMapper.error;
+          return <span>{messageType.label}</span>
+        },
+      },
       { title: '模版名称', dataIndex: 'templateName' },
-      { title: '发送状态', dataIndex: 'sendState' },
+      {
+        title: '发送状态', dataIndex: 'sendState', render: val => {
+          let sendState = SendStateMapper[`${val}`];
+          if (!sendState) sendState = SendStateMapper.error;
+          return <span style={{ color: sendState.color }}>{sendState.label}</span>
+        },
+      },
       { title: '发送时间', dataIndex: 'sendTime' },
-      { title: '耗时', dataIndex: 'useTime' },
+      { title: '耗时', dataIndex: 'useTime', render: val => fmtTime(val) },
       // { title: '', dataIndex: 'failReason' },
       // { title: '', dataIndex: 'messageObject' },
       { title: '是否启用', dataIndex: 'enabled' },
@@ -101,6 +113,8 @@ export default class MessageSendLog extends PureComponent {
         title: '操作', align: 'center', key: 'action',
         render: () => (
           <Fragment>
+            <a>详情</a>
+            <Divider type="vertical" />
             <a>删除</a>
           </Fragment>
         ),

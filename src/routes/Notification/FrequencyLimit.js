@@ -1,11 +1,11 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Card, Form, Row, Input, Select, Button, DatePicker, Table } from 'antd';
+import { Card, Form, Row, Input, Select, Button, DatePicker, Table, Divider } from 'antd';
 import { connect } from 'dva';
-// import moment from 'moment';
+import moment from 'moment';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 // import { LocaleLanguage, SystemInfo } from '../../utils/constant';
 // import { changeLocale } from '../../utils/utils';
-import { SorterOrderMapper, StatusArray, MessageTypeArray } from '../../utils/enum';
+import { SorterOrderMapper, StatusArray, MessageTypeArray, StatusMapper, MessageTypeMapper } from '../../utils/enum';
 // import classNames from 'classnames';
 import styles from './FrequencyLimit.less';
 
@@ -89,10 +89,23 @@ export default class FrequencyLimit extends PureComponent {
           </Form.Item>
           <Form.Item className={styles.formItemButton}>
             <Button type="primary" htmlType="submit" disabled={queryLoading}>查询</Button>
+            <span className={styles.spanWidth16} />
+            <Button>新增</Button>
           </Form.Item>
         </Row>
       </Form>
     );
+  }
+
+  getEnabledLabel = (val) => {
+    let enabled = StatusMapper[`${val}`];
+    if (!enabled) enabled = StatusMapper.error;
+    return <span style={{ color: enabled.color }}>{enabled.label}</span>
+  }
+
+  getLimit = (count) => {
+    if (!count || count <= 0) return <span style={{ color: '#faad14' }}>无限制</span>;
+    return <span style={{ color: '#52c41a' }}>{count}</span>;
   }
 
   // 数据表格
@@ -100,21 +113,29 @@ export default class FrequencyLimit extends PureComponent {
     const { FrequencyLimitModel, queryLoading } = this.props;
     const columns = [
       { title: '系统名称', dataIndex: 'sysName' },
-      { title: '消息类型', dataIndex: 'messageType' },
+      {
+        title: '消息类型', dataIndex: 'messageType', render: val => {
+          let messageType = MessageTypeMapper[`${val}`];
+          if (!messageType) messageType = MessageTypeMapper.error;
+          return <span>{messageType.label}</span>
+        },
+      },
       { title: '限速帐号', dataIndex: 'account' },
-      { title: '是否启用', dataIndex: 'enabled' },
+      { title: '是否启用', dataIndex: 'enabled', render: this.getEnabledLabel },
       { title: '过期时间', dataIndex: 'expiredTime' },
-      { title: '每分钟发送次数限制', dataIndex: 'minutesCount' },
-      { title: '每小时发送次数限制', dataIndex: 'hoursCount' },
-      { title: '每天发送次数限制', dataIndex: 'daysCount' },
-      { title: '每周发送次数限制', dataIndex: 'weeksCount' },
-      { title: '每月发送次数限制', dataIndex: 'monthsCount' },
+      { title: '每分钟发送次数限制', dataIndex: 'minutesCount', render: this.getLimit },
+      { title: '每小时发送次数限制', dataIndex: 'hoursCount', render: this.getLimit },
+      { title: '每天发送次数限制', dataIndex: 'daysCount', render: this.getLimit },
+      { title: '每周发送次数限制', dataIndex: 'weeksCount', render: this.getLimit },
+      { title: '每月发送次数限制', dataIndex: 'monthsCount', render: this.getLimit },
       // { title: '创建时间', dataIndex: 'createAt' },
       // { title: '更新时间', dataIndex: 'updateAt' },
       {
         title: '操作', align: 'center', key: 'action',
         render: () => (
           <Fragment>
+            <a>编辑</a>
+            <Divider type="vertical" />
             <a>删除</a>
           </Fragment>
         ),

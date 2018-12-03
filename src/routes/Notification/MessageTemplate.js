@@ -1,11 +1,11 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Card, Form, Row, Input, Select, Button, Table } from 'antd';
+import { Card, Form, Row, Input, Select, Button, Table, Divider } from 'antd';
 import { connect } from 'dva';
 // import moment from 'moment';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 // import { LocaleLanguage, SystemInfo } from '../../utils/constant';
 // import { changeLocale } from '../../utils/utils';
-import { SorterOrderMapper, StatusArray } from '../../utils/enum';
+import { SorterOrderMapper, StatusArray, StatusMapper } from '../../utils/enum';
 // import classNames from 'classnames';
 import styles from './MessageTemplate.less';
 
@@ -70,10 +70,18 @@ export default class MessageTemplate extends PureComponent {
           </Form.Item>
           <Form.Item className={styles.formItemButton}>
             <Button type="primary" htmlType="submit" disabled={queryLoading}>查询</Button>
+            <span className={styles.spanWidth16} />
+            <Button>新增</Button>
           </Form.Item>
         </Row>
       </Form>
     );
+  }
+
+  getEnabledLabel = (val) => {
+    let enabled = StatusMapper[`${val}`];
+    if (!enabled) enabled = StatusMapper.error;
+    return <span style={{ color: enabled.color }}>{enabled.label}</span>
   }
 
   // 数据表格
@@ -83,7 +91,7 @@ export default class MessageTemplate extends PureComponent {
       { title: '模版名称', dataIndex: 'name' },
       { title: '模版内容', dataIndex: 'content' },
       // { title: '模版示例', dataIndex: 'messageDemo' },
-      { title: '启用模版', dataIndex: 'enabled' },
+      { title: '启用模版', dataIndex: 'enabled', render: this.getEnabledLabel },
       // { title: '说明', dataIndex: 'description' },
       // { title: '创建时间', dataIndex: 'createAt' },
       // { title: '更新时间', dataIndex: 'updateAt' },
@@ -91,6 +99,10 @@ export default class MessageTemplate extends PureComponent {
         title: '操作', align: 'center', key: 'action',
         render: () => (
           <Fragment>
+            <a>详情</a>
+            <Divider type="vertical" />
+            <a>编辑</a>
+            <Divider type="vertical" />
             <a>删除</a>
           </Fragment>
         ),
