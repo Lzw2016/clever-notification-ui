@@ -5,7 +5,7 @@ import { connect } from 'dva';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 // import { LocaleLanguage, SystemInfo } from '../../utils/constant';
 import { fmtTime } from '../../utils/fmt';
-import { SorterOrderMapper, SendStateArray, SendStateMapper, MessageTypeMapper } from '../../utils/enum';
+import { SorterOrderMapper, SendStateArray, SendStateMapper, MessageTypeMapper, ReceiveStateMapper } from '../../utils/enum';
 // import classNames from 'classnames';
 import styles from './MessageSendLog.less';
 
@@ -106,7 +106,15 @@ export default class MessageSendLog extends PureComponent {
       { title: '耗时', dataIndex: 'useTime', render: val => fmtTime(val) },
       // { title: '', dataIndex: 'failReason' },
       // { title: '', dataIndex: 'messageObject' },
-      { title: '是否启用', dataIndex: 'enabled' },
+      {
+        title: '接收状态', dataIndex: 'receiveState', render: val => {
+          let receiveState = ReceiveStateMapper[`${val}`];
+          if (!receiveState) receiveState = ReceiveStateMapper.error;
+          return <span style={{ color: receiveState.color }}>{receiveState.label}</span>
+        },
+      },
+      // { title: '接收状态描述', dataIndex: 'receiveMsg' },
+      { title: '接收时间', dataIndex: 'receiveTime' },
       // { title: '创建时间', dataIndex: 'createAt' },
       // { title: '更新时间', dataIndex: 'updateAt' },
       {

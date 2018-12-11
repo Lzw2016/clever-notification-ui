@@ -39,6 +39,18 @@ const SendStateMapper = {
   'error': { label: '未知', color: '#f5222d' },
 };
 
+// 接收状态，1：未知；2：接收失败；3：接收成功
+const ReceiveStateArray = [
+  { value: '1', label: '-' },
+  { value: '2', label: '接收失败' },
+  { value: '3', label: '接收成功' },
+];
+const ReceiveStateMapper = {
+  '1': { label: '-', color: undefined },
+  '2': { label: '接收失败', color: '#f5222d' },
+  '3': { label: '接收成功', color: '#52c41a' },
+  'error': { label: '未知', color: '#f5222d' },
+};
 
 export {
   StatusArray,
@@ -48,4 +60,6 @@ export {
   MessageTypeMapper,
   SendStateArray,
   SendStateMapper,
+  ReceiveStateArray,
+  ReceiveStateMapper,
 };
