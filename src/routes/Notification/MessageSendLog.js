@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Card, Form, Row, Input, Select, Button, Table, Divider } from 'antd';
+import { Card, Form, Row, Input, Select, Button, Table, Divider, Popover } from 'antd';
 import { connect } from 'dva';
 // import moment from 'moment';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -51,14 +51,14 @@ export default class MessageSendLog extends PureComponent {
     return (
       <Form onSubmit={this.findByPage} layout="inline" className={styles.queryForm}>
         <Row gutter={{ md: 0, lg: 0, xl: 0 }}>
-          <Form.Item label="系统名字">
-            {getFieldDecorator('sysName', { initialValue: queryParam.sysName })(
-              <Input placeholder="系统名字" />
-            )}
-          </Form.Item>
           <Form.Item label="Send ID">
             {getFieldDecorator('sendId', { initialValue: queryParam.sendId })(
               <Input placeholder="Send ID" />
+            )}
+          </Form.Item>
+          <Form.Item label="系统名字">
+            {getFieldDecorator('sysName', { initialValue: queryParam.sysName })(
+              <Input placeholder="系统名字" />
             )}
           </Form.Item>
           <Form.Item label="发送状态">
@@ -81,12 +81,43 @@ export default class MessageSendLog extends PureComponent {
     );
   }
 
+  // 目标帐号
+  getTargetAccount = (messageObject) => {
+    if (!messageObject) return '-';
+    const { to } = JSON.parse(messageObject);
+    if (to instanceof Array && to.length > 0) {
+      return <span title={to.length >= 2 ? `目标帐号总数${to.length}个` : undefined}>{to[0]}</span>;
+    } else if ((typeof to) === "string") {
+      return <span>{to}</span>;
+    }
+    return '-';
+  }
+
+  getContent = (messageObject) => {
+    if (!messageObject) return undefined;
+    const object = JSON.parse(messageObject);
+    const styleLable = { display: 'inline-block', width: 65, textAlign: 'left', fontWeight: 'bold', verticalAlign: "top" };
+    const styleValue = { display: 'inline-block', width: 350, textAlign: 'left' };
+    return (
+      <Fragment>
+        <div>
+          <span style={styleLable}>异步发送</span>
+          <span style={{ ...styleValue, color: '#1890ff' }}>{object.asyncCallBack}</span>
+        </div>
+        <div>
+          <span style={styleLable}>消息内容</span>
+          <span style={styleValue}>{object.content}</span>
+        </div>
+      </Fragment>
+    );
+  }
+
   // 数据表格
   getTable() {
     const { MessageSendLogModel, queryLoading } = this.props;
     const columns = [
-      { title: '系统名称', dataIndex: 'sysName' },
       { title: 'Send ID', dataIndex: 'sendId' },
+      { title: '系统名称', dataIndex: 'sysName' },
       {
         title: '消息类型', dataIndex: 'messageType', render: val => {
           let messageType = MessageTypeMapper[`${val}`];
@@ -94,12 +125,23 @@ export default class MessageSendLog extends PureComponent {
           return <span>{messageType.label}</span>
         },
       },
-      { title: '模版名称', dataIndex: 'templateName' },
+      { title: '目标帐号', dataIndex: 'messageObject', render: this.getTargetAccount },
       {
-        title: '发送状态', dataIndex: 'sendState', render: val => {
+        title: '模版名称', dataIndex: 'templateName', render: (val, record) => {
+          const content = this.getContent(record.messageObject);
+          if (!content) return <span>{val}</span>;
+          return (
+            <Popover content={content} title="发送消息内容" trigger="hover" placement="rightTop">
+              <span style={{ color: '#1890ff', cursor: 'pointer' }}>{val}</span>
+            </Popover>
+          );
+        },
+      },
+      {
+        title: '发送状态', dataIndex: 'sendState', render: (val, record) => {
           let sendState = SendStateMapper[`${val}`];
           if (!sendState) sendState = SendStateMapper.error;
-          return <span style={{ color: sendState.color }}>{sendState.label}</span>
+          return <span style={{ color: sendState.color }} title={record.failReason ? record.failReason : undefined}>{sendState.label}</span>
         },
       },
       { title: '发送时间', dataIndex: 'sendTime' },
@@ -114,7 +156,7 @@ export default class MessageSendLog extends PureComponent {
         },
       },
       // { title: '接收状态描述', dataIndex: 'receiveMsg' },
-      { title: '接收时间', dataIndex: 'receiveTime' },
+      { title: '接收时间', dataIndex: 'receiveTime', render: val => <span>{val || '-'}</span> },
       // { title: '创建时间', dataIndex: 'createAt' },
       // { title: '更新时间', dataIndex: 'updateAt' },
       {
