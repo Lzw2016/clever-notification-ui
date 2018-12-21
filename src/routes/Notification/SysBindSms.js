@@ -5,6 +5,7 @@ import moment from 'moment';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 // import { LocaleLanguage, SystemInfo } from '../../utils/constant';
 // import { changeLocale } from '../../utils/utils';
+import { fmtDateTime } from '../../utils/fmt';
 import { SorterOrderMapper, StatusArray, MessageTypeArray } from '../../utils/enum';
 // import classNames from 'classnames';
 import styles from './SysBindSms.less';
@@ -26,6 +27,12 @@ export default class SysBindSms extends PureComponent {
     if (e) e.preventDefault();
     const { dispatch, form } = this.props;
     const queryParam = form.getFieldsValue();
+    if (queryParam.expiredTimeStart) {
+      queryParam.expiredTimeStart = fmtDateTime(queryParam.expiredTimeStart, "YYYY-MM-DD 00:00:00");
+    }
+    if (queryParam.expiredTimeEnd) {
+      queryParam.expiredTimeEnd = fmtDateTime(queryParam.expiredTimeEnd, "YYYY-MM-DD 23:59:59");
+    }
     dispatch({ type: 'SysBindSmsModel/findByPage', payload: { ...queryParam, pageNo: 0 } });
   }
 
@@ -77,14 +84,14 @@ export default class SysBindSms extends PureComponent {
           </Form.Item>
         </Row>
         <Row gutter={{ md: 0, lg: 0, xl: 0 }}>
-          <Form.Item label="过去时间">
+          <Form.Item label="过期时间">
             {getFieldDecorator('expiredTimeStart', { initialValue: queryParam.expiredTimeStart ? moment(queryParam.expiredTimeStart) : undefined })(
-              <DatePicker placeholder="过去时间-开始" style={{ width: 174 }} />
+              <DatePicker placeholder="过期时间-开始" style={{ width: 174 }} />
             )}
           </Form.Item>
-          <Form.Item label="过去时间">
+          <Form.Item label="过期时间">
             {getFieldDecorator('expiredTimeEnd', { initialValue: queryParam.expiredTimeEnd ? moment(queryParam.expiredTimeEnd) : undefined })(
-              <DatePicker placeholder="过去时间-结束" style={{ width: 174 }} />
+              <DatePicker placeholder="过期时间-结束" style={{ width: 174 }} />
             )}
           </Form.Item>
           <Form.Item className={styles.formItemButton}>

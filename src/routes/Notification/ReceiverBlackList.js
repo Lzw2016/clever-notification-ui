@@ -5,6 +5,7 @@ import moment from 'moment';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 // import { LocaleLanguage, SystemInfo } from '../../utils/constant';
 // import { changeLocale } from '../../utils/utils';
+import { fmtDateTime } from '../../utils/fmt';
 import { SorterOrderMapper, StatusArray, MessageTypeArray, StatusMapper, MessageTypeMapper } from '../../utils/enum';
 // import classNames from 'classnames';
 import styles from './ReceiverBlackList.less';
@@ -26,6 +27,12 @@ export default class ReceiverBlackList extends PureComponent {
     if (e) e.preventDefault();
     const { dispatch, form } = this.props;
     const queryParam = form.getFieldsValue();
+    if (queryParam.expiredTimeStart) {
+      queryParam.expiredTimeStart = fmtDateTime(queryParam.expiredTimeStart, "YYYY-MM-DD 00:00:00");
+    }
+    if (queryParam.expiredTimeEnd) {
+      queryParam.expiredTimeEnd = fmtDateTime(queryParam.expiredTimeEnd, "YYYY-MM-DD 23:59:59");
+    }
     dispatch({ type: 'ReceiverBlackListModel/findByPage', payload: { ...queryParam, pageNo: 0 } });
   }
 
@@ -103,7 +110,7 @@ export default class ReceiverBlackList extends PureComponent {
     return <span style={{ color: enabled.color }}>{enabled.label}</span>
   }
 
-  // 数据表格 
+  // 数据表格
   getTable() {
     const { ReceiverBlackListModel, queryLoading } = this.props;
     const columns = [

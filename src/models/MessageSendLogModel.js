@@ -8,8 +8,9 @@ export default {
   state: {
     queryParam: {
       ...ModelInitState.queryParam,
-      sysName: undefined,
       sendId: undefined,
+      sysName: undefined,
+      messageType: undefined,
       sendState: undefined,
       templateName: undefined,
       useTimeMin: undefined,

@@ -1,11 +1,12 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Card, Form, Row, Input, Select, Button, Table, Divider, Popover } from 'antd';
+import { Card, Form, Row, Input, Select, Button, Table, Divider, Popover, DatePicker } from 'antd';
 import { connect } from 'dva';
-// import moment from 'moment';
+import moment from 'moment';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 // import { LocaleLanguage, SystemInfo } from '../../utils/constant';
-import { fmtTime } from '../../utils/fmt';
-import { SorterOrderMapper, SendStateArray, SendStateMapper, MessageTypeMapper, ReceiveStateMapper } from '../../utils/enum';
+import { cutOffStr } from '../../utils/utils';
+import { fmtTime, fmtDateTime } from '../../utils/fmt';
+import { SorterOrderMapper, SendStateArray, SendStateMapper, MessageTypeMapper, ReceiveStateMapper, MessageTypeArray } from '../../utils/enum';
 // import classNames from 'classnames';
 import styles from './MessageSendLog.less';
 
@@ -26,6 +27,12 @@ export default class MessageSendLog extends PureComponent {
     if (e) e.preventDefault();
     const { dispatch, form } = this.props;
     const queryParam = form.getFieldsValue();
+    if (queryParam.sendTimeStart) {
+      queryParam.sendTimeStart = fmtDateTime(queryParam.sendTimeStart, "YYYY-MM-DD 00:00:00");
+    }
+    if (queryParam.sendTimeEnd) {
+      queryParam.sendTimeEnd = fmtDateTime(queryParam.sendTimeEnd, "YYYY-MM-DD 23:59:59");
+    }
     dispatch({ type: 'MessageSendLogModel/findByPage', payload: { ...queryParam, pageNo: 0 } });
   }
 
@@ -73,6 +80,25 @@ export default class MessageSendLog extends PureComponent {
               <Input placeholder="模版名称" />
             )}
           </Form.Item>
+        </Row>
+        <Row>
+          <Form.Item label="消息类型">
+            {getFieldDecorator('messageType', { initialValue: queryParam.messageType })(
+              <Select placeholder="消息类型" allowClear={true}>
+                {MessageTypeArray.map(item => (<Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>))}
+              </Select>
+            )}
+          </Form.Item>
+          <Form.Item label="发送时间">
+            {getFieldDecorator('sendTimeStart', { initialValue: queryParam.sendTimeStart ? moment(queryParam.sendTimeStart) : undefined })(
+              <DatePicker placeholder="发送时间-开始" style={{ width: 174 }} />
+            )}
+          </Form.Item>
+          <Form.Item label="发送时间">
+            {getFieldDecorator('sendTimeEnd', { initialValue: queryParam.sendTimeEnd ? moment(queryParam.sendTimeEnd) : undefined })(
+              <DatePicker placeholder="发送时间-结束" style={{ width: 174 }} />
+            )}
+          </Form.Item>
           <Form.Item className={styles.formItemButton}>
             <Button type="primary" htmlType="submit" disabled={queryLoading}>查询</Button>
           </Form.Item>
@@ -106,7 +132,7 @@ export default class MessageSendLog extends PureComponent {
         </div>
         <div>
           <span style={styleLable}>消息内容</span>
-          <span style={styleValue}>{object.content}</span>
+          <span style={styleValue}>{cutOffStr(object.content, 600)}</span>
         </div>
       </Fragment>
     );
@@ -129,10 +155,10 @@ export default class MessageSendLog extends PureComponent {
       {
         title: '模版名称', dataIndex: 'templateName', render: (val, record) => {
           const content = this.getContent(record.messageObject);
-          if (!content) return <span>{val}</span>;
+          if (!content) return <span>{val || '--'}</span>;
           return (
             <Popover content={content} title="发送消息内容" trigger="hover" placement="rightTop">
-              <span style={{ color: '#1890ff', cursor: 'pointer' }}>{val}</span>
+              <span style={{ color: '#1890ff', cursor: 'pointer' }}>{val || '--'}</span>
             </Popover>
           );
         },

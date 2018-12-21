@@ -4,7 +4,7 @@ import { connect } from 'dva';
 // import moment from 'moment';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 // import { LocaleLanguage, SystemInfo } from '../../utils/constant';
-// import { changeLocale } from '../../utils/utils';
+import { cutOffStr } from '../../utils/utils';
 import { SorterOrderMapper, StatusArray, StatusMapper } from '../../utils/enum';
 // import classNames from 'classnames';
 import styles from './MessageTemplate.less';
@@ -89,7 +89,7 @@ export default class MessageTemplate extends PureComponent {
     const { MessageTemplateModel, queryLoading } = this.props;
     const columns = [
       { title: '模版名称', dataIndex: 'name' },
-      { title: '模版内容', dataIndex: 'content' },
+      { title: '模版内容', dataIndex: 'content', render: val => cutOffStr(val, 100) },
       // { title: '模版示例', dataIndex: 'messageDemo' },
       { title: '启用模版', dataIndex: 'enabled', render: this.getEnabledLabel },
       // { title: '说明', dataIndex: 'description' },
